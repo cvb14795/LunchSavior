@@ -20,7 +20,7 @@ public class RestaurantController {
      * @param dto Restaurant details
      * @return HTTP 201 Created
      */
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<Void> addRestaurant(@RequestBody RestaurantDto dto) {
         restaurantService.addRestaurant(dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
