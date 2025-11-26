@@ -1,9 +1,12 @@
 package com.example.LunchSavior.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public record RestaurantDto(
-        String name,
-        String address,
-        Double latitude,
-        Double longitude,
-        Integer priceRange) {
+                @NotBlank String name,
+                @NotBlank String address,
+                @NotNull Double latitude,
+                @NotNull Double longitude,
+                @NotNull Integer priceRange) {
 }

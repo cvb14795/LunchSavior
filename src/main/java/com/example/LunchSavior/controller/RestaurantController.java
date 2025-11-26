@@ -21,7 +21,7 @@ public class RestaurantController {
      * @return HTTP 201 Created
      */
     @PostMapping
-    public ResponseEntity<Void> addRestaurant(@RequestBody RestaurantDto dto) {
+    public ResponseEntity<Void> addRestaurant(@RequestBody @jakarta.validation.Valid RestaurantDto dto) {
         restaurantService.addRestaurant(dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
