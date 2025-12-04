@@ -14,6 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
+import com.example.LunchSavior.config.JwtAuthenticationFilter;
+import org.springframework.security.authentication.AuthenticationProvider;
 
 import java.util.Optional;
 
@@ -41,6 +43,12 @@ public class AuthenticationControllerTest {
 
     @MockitoBean
     private AuthenticationManager authenticationManager;
+
+    @MockitoBean
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @MockitoBean
+    private AuthenticationProvider authenticationProvider;
 
     @Autowired
     private ObjectMapper objectMapper;
