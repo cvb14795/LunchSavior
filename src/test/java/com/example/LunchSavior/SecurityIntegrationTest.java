@@ -11,11 +11,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -37,10 +38,10 @@ public class SecurityIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
+    @MockitoBean
     private RestaurantService restaurantService;
 
-    @MockBean
+    @MockitoBean
     private UserRepository userRepository;
 
     @Autowired
@@ -50,7 +51,7 @@ public class SecurityIntegrationTest {
     void testPublicEndpoint_Gacha() throws Exception {
         // 1. 公開端點測試：GET /api/v1/restaurants/gacha
         // Mock service response
-        when(restaurantService.gacha(any(Double.class), any(Double.class)))
+        when(restaurantService.gacha(any(Double.class), any(Double.class), any(BigDecimal.class)))
                 .thenReturn(new RestaurantDto("Test Restaurant", "Test Address", 25.0, 121.0, 1));
 
         mockMvc.perform(get("/api/v1/restaurants/gacha")
