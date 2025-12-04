@@ -7,6 +7,7 @@ import com.example.LunchSavior.repository.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Random;
 
@@ -33,19 +34,22 @@ public class RestaurantService {
     }
 
     /**
-     * Gacha: Find a random restaurant within 1km.
+     * Gacha: Find a random restaurant within the specified distance.
      *
-     * @param lat User's latitude
-     * @param lon User's longitude
+     * @param lat        User's latitude
+     * @param lon        User's longitude
+     * @param distanceKm Search radius in kilometers
      * @return The selected RestaurantDto
-     * @throws RestaurantNotFoundException if no restaurants found within 1km
+     * @throws RestaurantNotFoundException if no restaurants found within the
+     *                                     specified distance
      */
-    public RestaurantDto gacha(double lat, double lon) {
-        // Find restaurants within 1km
-        List<Restaurant> nearbyRestaurants = restaurantRepository.findNearbyRestaurants(lat, lon, 1.0);
+    public RestaurantDto gacha(double lat, double lon, BigDecimal distanceKm) {
+        // Find restaurants within the specified distance
+        List<Restaurant> nearbyRestaurants = restaurantRepository.findNearbyRestaurants(lat, lon,
+                distanceKm.doubleValue());
 
         if (nearbyRestaurants.isEmpty()) {
-            throw new RestaurantNotFoundException("No restaurants found within 1km!");
+            throw new RestaurantNotFoundException("No restaurants found within " + distanceKm + "km!");
         }
 
         // Pick one randomly

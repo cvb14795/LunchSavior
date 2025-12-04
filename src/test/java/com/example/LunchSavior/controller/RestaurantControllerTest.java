@@ -7,9 +7,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import com.example.LunchSavior.config.JwtAuthenticationFilter;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
@@ -20,14 +23,23 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.math.BigDecimal;
+
 @WebMvcTest(RestaurantController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class RestaurantControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @MockitoBean
     private RestaurantService restaurantService;
+
+    @MockitoBean
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @MockitoBean
+    private AuthenticationProvider authenticationProvider;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -58,7 +70,7 @@ public class RestaurantControllerTest {
     public void gacha_Success() throws Exception {
         RestaurantDto mockRestaurant = new RestaurantDto("Random Sushi", "456 Fish Rd", 25.04, 121.57, 3);
 
-        when(restaurantService.gacha(anyDouble(), anyDouble())).thenReturn(mockRestaurant);
+        when(restaurantService.gacha(anyDouble(), anyDouble(), any(BigDecimal.class))).thenReturn(mockRestaurant);
 
         mockMvc.perform(get("/api/v1/restaurants/gacha")
                 .param("lat", "25.0330")
@@ -70,7 +82,7 @@ public class RestaurantControllerTest {
 
     @Test
     public void gacha_NotFound() throws Exception {
-        when(restaurantService.gacha(anyDouble(), anyDouble()))
+        when(restaurantService.gacha(anyDouble(), anyDouble(), any(BigDecimal.class)))
                 .thenThrow(new RestaurantNotFoundException("No restaurants found within 1km!"));
 
         mockMvc.perform(get("/api/v1/restaurants/gacha")
